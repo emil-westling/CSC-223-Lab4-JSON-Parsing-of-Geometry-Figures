@@ -27,7 +27,13 @@ public class JSONParser
 	{
 		throw new ParseException("Parse error: " + message);
 	}
-
+	
+	/**
+	 * 
+	 * @param str
+	 * @return FigureNode
+	 * @throws ParseException
+	 */
 	public ComponentNode parse(String str) throws ParseException
 	{
 		// Parsing is accomplished via the JSONTokenizer class.
@@ -38,5 +44,7 @@ public class JSONParser
 	}
 
     // TODO: implement supporting functionality
+	
+	
 
 }
