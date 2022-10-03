@@ -1,7 +1,10 @@
 package input.parser;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,14 +43,23 @@ public class JSONParser
 		JSONTokener tokenizer = new JSONTokener(str);
 		JSONObject  JSONroot = (JSONObject)tokenizer.nextValue();
 		
-		getPoints(JSONroot);
+		String description = JSONroot.getString("Description");
+		PointNodeDatabase pointDB = getPoints(JSONroot);
+		SegmentNodeDatabase segmentDB = getSegments(JSONroot, pointDB);
 		
-		return null;
+		FigureNode figure = new FigureNode(description, pointDB, segmentDB);
+		
+		return figure;
 
         // TODO: Build the whole AST, check for return class object, and return the root
 	}
     // TODO: implement supporting functionality
 	
+	/**
+	 * 
+	 * @param obj
+	 * @return PointNodeDatabase
+	 */
 	private PointNodeDatabase getPoints(JSONObject obj) {
 		JSONArray points = obj.getJSONArray("Points");
 		System.out.println(points.toString());
@@ -64,6 +76,38 @@ public class JSONParser
 		}
 		return pointDB;
 	}
+	
+	private SegmentNodeDatabase getSegments(JSONObject obj, PointNodeDatabase pointDB) {
+		// Get the array of segments that is assigned to the "Segments" key in JSON
+		JSONArray segments = obj.getJSONArray("Segments");
+		
+		// Create an empty SegmentNodeDatabase
+		SegmentNodeDatabase segmentDB = new SegmentNodeDatabase();
+		
+		// Loop through the segments in the array
+		for(Object o : segments) {
+			
+			// For each segment in the array extract the key
+			String keyStr = ((JSONObject) o).keySet().toArray().toString();
+			PointNode key = pointDB.getPoint(keyStr);
+			
+			// Get the point corresponding with that key from the PointNodeDatabase
+			
+			// Get the array of values assigned to that key
+			JSONArray points = obj.getJSONArray(keyStr);
+			// Loop through that array and get each value 
+			for(Object str : points) {
+				// Get the point corresponding to that value from the PointNodeDatabase 
+				String pointStr = str.toString();
+				PointNode point = pointDB.getPoint(pointStr);
+				// Add that point and the key to a the SegmentNodeDatabase
+				segmentDB.addUndirectedEdge(key, point);
+			}
+		}
+		
+		return segmentDB;
+	}
+	
 	
 
 	public static void main(String[] args ) {
