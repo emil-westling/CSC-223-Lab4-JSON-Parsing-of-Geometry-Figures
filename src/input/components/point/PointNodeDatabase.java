@@ -103,7 +103,7 @@ public class PointNodeDatabase {
 	 * @param point - a string name of a given point
 	 * @return PointNode
 	 */
-	public PointNode getName(String point) {
+	public PointNode getPoint(String point) {
 		Iterator<PointNode> itr = _set.iterator(); 
 		while (itr.hasNext()) {
 			
