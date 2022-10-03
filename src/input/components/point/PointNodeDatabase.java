@@ -99,6 +99,24 @@ public class PointNodeDatabase {
 	}
 	
 	/**
+	 * A method for getting the point based on the name
+	 * @param point - a string name of a given point
+	 * @return PointNode
+	 */
+	public PointNode getName(String point) {
+		Iterator<PointNode> itr = _set.iterator(); 
+		while (itr.hasNext()) {
+			
+			PointNode next = (PointNode)itr.next();
+			
+			if (next.getName() == point) {
+				return next;
+			}
+		}	
+		return null;
+	}
+	
+	/**
 	 * Gets the given point.
 	 * @param point - the point to get
 	 * @return the point
