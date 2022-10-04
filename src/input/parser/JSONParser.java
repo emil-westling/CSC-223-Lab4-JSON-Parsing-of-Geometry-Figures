@@ -55,9 +55,9 @@ public class JSONParser
 		// Construct the figure by passing each of the above 
 		// items: the description, the PointNodeDatabase, and the SegmentNodeDatabase 
 		// into the FigureNode constructor.
-		FigureNode figure = new FigureNode(description, pointDB, segmentDB);
+		_astRoot = new FigureNode(description, pointDB, segmentDB);
 		
-		return figure;
+		return _astRoot;
 
         // TODO: Build the whole AST, check for return class object, and return the root
 	}
@@ -116,15 +116,5 @@ public class JSONParser
 		return segmentDB;
 	}
 	
-	
-
-	public static void main(String[] args ) {
-		JSONParser p = new JSONParser();
-		String figureStr = utilities.io.FileUtilities.readFileFilterComments("/CSC-223-Lab4/collinear_line_segments.json");
-		ComponentNode n = p.parse(figureStr);
-	}
-	
-	
-
 }
 
