@@ -43,10 +43,18 @@ public class JSONParser
 		JSONTokener tokenizer = new JSONTokener(str);
 		JSONObject  JSONroot = (JSONObject)tokenizer.nextValue();
 		
+		// Set the Description by getting it from the JSON file
 		String description = JSONroot.getString("Description");
+		
+		// Construct the PointNodeDatabase from the "Points" values in the JSON file
 		PointNodeDatabase pointDB = getPoints(JSONroot);
+		
+		// Construct the PointNodeDatabase from the "Points" values in the JSON file
 		SegmentNodeDatabase segmentDB = getSegments(JSONroot, pointDB);
 		
+		// Construct the figure by passing each of the above 
+		// items: the description, the PointNodeDatabase, and the SegmentNodeDatabase 
+		// into the FigureNode constructor.
 		FigureNode figure = new FigureNode(description, pointDB, segmentDB);
 		
 		return figure;
