@@ -32,6 +32,21 @@ public class FigureNode implements ComponentNode
 	@Override
 	public void unparse(StringBuilder sb, int level)
 	{
-        // TODO
+		// Print the key "Figure" follow by a semicolon and a new line character
+		// Print the description segment beginning with an indent character 
+        // For each point in the PointNodeDatabase 
+		// Print "{ "name" : " + the name of the point followed by the x and y and their values
+		// If it's not the last point in the database print a comma
+		
     }
+	
+	private void printPoints() {
+		// TODO
+	}
+	
+	private void printSegments() {
+		// TODO
+	}
+	
+	
 }
