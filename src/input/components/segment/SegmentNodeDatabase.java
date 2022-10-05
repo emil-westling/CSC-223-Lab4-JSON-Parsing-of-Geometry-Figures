@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import input.components.point.PointNode;
+import utilities.io.StringUtilities;
 
 public class SegmentNodeDatabase {
 
@@ -152,4 +153,19 @@ public class SegmentNodeDatabase {
 		return list;
 	}
 
+	
+	private void printSegments(int level) {
+		List sl = _segments.asSegmentList();
+		StringUtilities s = new StringUtilities();
+		s.indent(level);
+		System.out.println("Points:");
+		s.indent(level);
+		System.out.println("{");
+		for(Object item: sl) {
+			s.indent(level + 1);
+			SegmentNodeDatabase segmentItem = (SegmentNodeDatabase)item;
+			List segList = segmentItem.asSegmentList();
+			
+		}
+	}
 }
