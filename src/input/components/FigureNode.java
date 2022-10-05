@@ -5,6 +5,7 @@ import java.util.Set;
 import input.components.point.PointNode;
 import input.components.point.PointNodeDatabase;
 import input.components.segment.SegmentNodeDatabase;
+import utilities.io.StringUtilities;
 
 /**
  * A basic figure consists of points, segments, and an optional description
@@ -32,20 +33,22 @@ public class FigureNode implements ComponentNode
 	@Override
 	public void unparse(StringBuilder sb, int level)
 	{
-		// Print the key "Figure" follow by a semicolon and a new line character
-		// Print the description segment beginning with an indent character 
-        // For each point in the PointNodeDatabase 
-		// Print "{ "name" : " + the name of the point followed by the x and y and their values
-		// If it's not the last point in the database print a comma
 		
-    }
-	
-	private void printPoints() {
-		// TODO
-	}
-	
-	private void printSegments() {
-		// TODO
+		sb.append(StringUtilities.indent(level) + "{ \n");
+		sb.append(StringUtilities.indent(level) + "figure: \n");
+		sb = unparseD(sb, level + 1);
+		sb = _points.unparse(sb, level + 1);
+		sb.append("\n");
+		sb = _segments.unparse(sb, level + 1);
+		sb.append(StringUtilities.indent(level) + "}");
+		
+		
+  }
+	public StringBuilder unparseD(StringBuilder sb, int level) {
+		sb.append(StringUtilities.indent(level));
+		sb.append(_description);
+		System.out.println(sb.toString());
+		return sb;
 	}
 	
 	

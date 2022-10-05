@@ -154,18 +154,18 @@ public class SegmentNodeDatabase {
 	}
 
 	
-	private void printSegments(int level) {
-		List sl = _segments.asSegmentList();
-		StringUtilities s = new StringUtilities();
-		s.indent(level);
-		System.out.println("Points:");
-		s.indent(level);
-		System.out.println("{");
-		for(Object item: sl) {
-			s.indent(level + 1);
-			SegmentNodeDatabase segmentItem = (SegmentNodeDatabase)item;
-			List segList = segmentItem.asSegmentList();
-			
+	public StringBuilder unparse(StringBuilder sb, int level) {
+		sb.append(StringUtilities.indent(level) + "Points \n");
+		sb.append(StringUtilities.indent(level) + "{");
+		for(Map.Entry<PointNode, Set<PointNode>> p: _adjLists.entrySet()) {
+			sb.append(StringUtilities.indent(level + 1));
+			sb.append("(" + p.getKey() + ")");
+			for(PointNode point: p.getValue()) {
+				sb.append("(" + point + ")");
+			}
+			sb.append("\n");
 		}
+		sb.append(StringUtilities.indent(level) + "} \n");
+		return sb;
 	}
 }
