@@ -6,6 +6,8 @@
 package input.components.point;
 
 import java.util.Iterator;
+
+import utilities.io.StringUtilities;
 import utilities.math.MathUtilities;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -109,7 +111,7 @@ public class PointNodeDatabase {
 			
 			PointNode next = (PointNode)itr.next();
 			
-			if (next.getName() == point) {
+			if (next.getName().equals(point)) {
 				return next;
 			}
 		}	
@@ -142,5 +144,18 @@ public class PointNodeDatabase {
 			}
 		}	
 		return null;
+	}
+	
+public StringBuilder unparse( StringBuilder sb, int level) {
+		
+		sb.append(StringUtilities.indent(level) + "Points");
+		sb.append("\n" + "{");
+		for(PointNode p: _set) {
+			sb.append(StringUtilities.indent(level + 1));
+			sb.append("Point(" + p.getName() + ")" + "(" + String.valueOf(p.getX()) + ")"
+			+ "(" + String.valueOf(p.getY()) + ") \n");
+		}
+		sb.append("}" + "\n");
+		return sb;
 	}
 }

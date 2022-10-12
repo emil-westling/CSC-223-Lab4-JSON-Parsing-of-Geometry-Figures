@@ -2,6 +2,7 @@ package input.parser;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,23 +40,28 @@ public class JSONParser
 	 */
 	public ComponentNode parse(String str) throws ParseException
 	{
-		// Parsing is accomplished via the JSONTokenizer class.
-		JSONTokener tokenizer = new JSONTokener(str);
-		JSONObject  JSONroot = (JSONObject)tokenizer.nextValue();
+		try {
+			// Parsing is accomplished via the JSONTokenizer class.
+			JSONTokener tokenizer = new JSONTokener(str);
+			JSONObject  JSONroot = (JSONObject)tokenizer.nextValue();
+			JSONObject object = (JSONObject) JSONroot.get("Figure");
+			// Set the Description by getting it from the JSON file
+			String description = object.getString("Description");
 		
-		// Set the Description by getting it from the JSON file
-		String description = JSONroot.getString("Description");
+			// Construct the PointNodeDatabase from the "Points" values in the JSON file
+			PointNodeDatabase pointDB = getPoints(object);
+			
+			// Construct the PointNodeDatabase from the "Points" values in the JSON file
+			SegmentNodeDatabase segmentDB = getSegments(object, pointDB);
+			
+			// Construct the figure by passing each of the above 
+			// items: the description, the PointNodeDatabase, and the SegmentNodeDatabase 
+			// into the FigureNode constructor.
+			_astRoot = new FigureNode(description, pointDB, segmentDB);
+		} catch (JSONException je) {
+			this.error("JSON file empty");
+		}
 		
-		// Construct the PointNodeDatabase from the "Points" values in the JSON file
-		PointNodeDatabase pointDB = getPoints(JSONroot);
-		
-		// Construct the PointNodeDatabase from the "Points" values in the JSON file
-		SegmentNodeDatabase segmentDB = getSegments(JSONroot, pointDB);
-		
-		// Construct the figure by passing each of the above 
-		// items: the description, the PointNodeDatabase, and the SegmentNodeDatabase 
-		// into the FigureNode constructor.
-		_astRoot = new FigureNode(description, pointDB, segmentDB);
 		
 		return _astRoot;
 
@@ -70,7 +76,6 @@ public class JSONParser
 	 */
 	private PointNodeDatabase getPoints(JSONObject obj) {
 		JSONArray points = obj.getJSONArray("Points");
-		System.out.println(points.toString());
 		PointNodeDatabase pointDB = new PointNodeDatabase();
 		
 		
@@ -87,29 +92,30 @@ public class JSONParser
 	
 	private SegmentNodeDatabase getSegments(JSONObject obj, PointNodeDatabase pointDB) {
 		// Get the array of segments that is assigned to the "Segments" key in JSON
-		JSONArray segments = obj.getJSONArray("Segments");
+		JSONArray segmentsArray = obj.getJSONArray("Segments");
 		
 		// Create an empty SegmentNodeDatabase
 		SegmentNodeDatabase segmentDB = new SegmentNodeDatabase();
 		
 		// Loop through the segments in the array
-		for(Object o : segments) {
+		for(Object o : segmentsArray) {
 			
 			// For each segment in the array extract the key
-			String keyStr = ((JSONObject) o).keySet().toArray().toString();
-			PointNode key = pointDB.getPoint(keyStr);
+			Iterator<String> keyArray = ((JSONObject) o).keys();
+			String key = keyArray.next();
+			PointNode keyPoint = pointDB.getPoint(key);
 			
 			// Get the point corresponding with that key from the PointNodeDatabase
 			
 			// Get the array of values assigned to that key
-			JSONArray points = obj.getJSONArray(keyStr);
+			JSONArray points = ((JSONObject)o).getJSONArray(key);
 			// Loop through that array and get each value 
 			for(Object str : points) {
 				// Get the point corresponding to that value from the PointNodeDatabase 
 				String pointStr = str.toString();
 				PointNode point = pointDB.getPoint(pointStr);
 				// Add that point and the key to a the SegmentNodeDatabase
-				segmentDB.addUndirectedEdge(key, point);
+				segmentDB.addUndirectedEdge(keyPoint, point);
 			}
 		}
 		
